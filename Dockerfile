@@ -13,15 +13,16 @@ RUN set -e; \
     echo "Installing GDS for CUDA ${CUDA_MM}" && \
     apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        python3 \
         gds-tools-${CUDA_MM} \
         libcufile-${CUDA_MM} \
-        libcufile-dev-${CUDA_MM} && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
+        librdmacm1 \
+        ibverbs-providers \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 # Make the utilities easy to reach
 ENV PATH=/usr/local/cuda/gds/tools:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/cuda/targets/x86_64-linux/lib:${LD_LIBRARY_PATH}
 
 # Stub config (override with –v /etc/cufile.json:/etc/cufile.json:ro at run-time)
 RUN echo '{}' > /etc/cufile.json
